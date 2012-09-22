@@ -1,4 +1,5 @@
 from django.forms import BaseForm, Field
+from django.forms.formsets import BaseFormSet
 from django.forms.widgets import TextInput, CheckboxInput, CheckboxSelectMultiple, RadioSelect
 from django.template import Context
 from django.template.loader import get_template
@@ -70,6 +71,14 @@ def as_bootstrap(form_or_field, layout='vertical'):
             Context({
                 'form': form_or_field,
                 'layout': layout,
+            })
+        )
+    elif isinstance(form_or_field, BaseFormSet):
+        return get_template("bootstrap_toolkit/formset.html").render(
+            Context({
+                'formset': form_or_field,
+                'layout': layout,
+                'not_show_label': True,
             })
         )
     else:

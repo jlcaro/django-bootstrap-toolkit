@@ -2,6 +2,7 @@ from django import forms
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
+
 def add_to_css_class(classes, new_class):
     new_class = new_class.strip()
     if new_class:
@@ -17,6 +18,7 @@ def add_to_css_class(classes, new_class):
             # Convert to string
         classes = u" ".join(classes)
     return classes
+
 
 class BootstrapDateInput(forms.TextInput):
 
@@ -37,10 +39,11 @@ class BootstrapDateInput(forms.TextInput):
         }
 
     def render(self, name, value, attrs=None):
-        if not attrs:
+        if attrs is None:
             attrs = {}
         if 'class' in attrs:
             attrs['class'] = add_to_css_class(attrs['class'], 'datepicker')
         else:
-            attrs['class'] = 'datepicker'
+            # TODO Fix dirty this dirty assign
+            attrs['class'] = 'datepicker span2'
         return super(BootstrapDateInput, self).render(name, value, attrs)
