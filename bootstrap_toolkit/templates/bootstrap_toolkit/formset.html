@@ -1,0 +1,37 @@
+{% load bootstrap_toolkit %}
+
+<div id="{{ formset.prefix }}-formset-container">
+    {{ formset.management_form }}
+    
+    {% if formset.non_form_errors %}
+        {% include "bootstrap_toolkit/non_form_errors.html" %}
+    {% endif %}
+
+    <table id="{{ formset.prefix }}-formset-table" class="form table">
+        {% for form in formset.forms %}
+            {% if forloop.first %}
+            <thead><tr>
+                {% for field in form.visible_fields %}
+                <th>{{ field.label|capfirst }}</th>
+                {% endfor %}
+            </tr></thead>
+            {% endif %}
+            <tr class="{% cycle row1,row2 %}">
+              {% for field in form.visible_fields %}
+              <td>
+                {# Include the hidden fields in the form #}
+                {% if forloop.first %}
+                    {% for field in form.hidden_fields %}
+                        {{ field }}
+                    {% endfor %}
+                {% endif %}
+                
+                {% include "bootstrap_toolkit/field_formset.html" with not_show_label="True" %}
+
+            </td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+</div>

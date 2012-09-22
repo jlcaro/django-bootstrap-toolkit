@@ -1,4 +1,4 @@
-<div class="control-group{% if field.errors %} error{% endif %}{% if field.field.required %} required{% endif %}">
+<div class="control-group{% if field.errors %} error{% endif %}{% if field.field.required %} required{% endif %} {{ field.field.control_group_span }}">
     {% if input_type == "checkbox" %}
         <div class="controls">
             {% include "bootstrap_toolkit/field_checkbox.html" %}
