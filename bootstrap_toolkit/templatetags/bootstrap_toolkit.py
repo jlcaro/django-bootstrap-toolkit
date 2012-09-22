@@ -1,10 +1,13 @@
-from django.forms import BaseForm, Field
+
+from django.forms import BaseForm
 from django.forms.formsets import BaseFormSet
+from django.forms.forms import BoundField
 from django.forms.widgets import TextInput, CheckboxInput, CheckboxSelectMultiple, RadioSelect
 from django.template import Context
 from django.template.loader import get_template
 from django import template
 from django.conf import settings
+
 
 BOOTSTRAP_BASE_URL = getattr(settings, 'BOOTSTRAP_BASE_URL',
     'http://twitter.github.com/bootstrap/assets/'
@@ -28,6 +31,7 @@ BOOTSTRAP_CSS_URL = getattr(settings, 'BOOTSTRAP_CSS_URL',
 
 register = template.Library()
 
+
 @register.simple_tag
 def bootstrap_stylesheet_url():
     """
@@ -35,12 +39,14 @@ def bootstrap_stylesheet_url():
     """
     return BOOTSTRAP_CSS_URL
 
+
 @register.simple_tag
 def bootstrap_stylesheet_tag():
     """
     HTML tag to insert Bootstrap stylesheet
     """
     return u'<link rel="stylesheet" href="%s">' % bootstrap_stylesheet_url()
+
 
 @register.simple_tag
 def bootstrap_javascript_url(name):
@@ -59,6 +65,7 @@ def bootstrap_javascript_tag(name):
     """
 
     return u'<script src="%s"></script>' % bootstrap_javascript_url(name)
+
 
 @register.filter
 def as_bootstrap(form_or_field, layout='vertical'):
@@ -81,13 +88,18 @@ def as_bootstrap(form_or_field, layout='vertical'):
                 'not_show_label': True,
             })
         )
-    else:
+    elif isinstance(form_or_field, BoundField):
+
         return get_template("bootstrap_toolkit/field.html").render(
             Context({
                 'field': form_or_field,
                 'layout': layout,
             })
         )
+    else:
+        # Display the default
+        return settings.TEMPLATE_STRING_IF_INVALID
+
 
 @register.filter
 def is_disabled(field):
@@ -102,12 +114,14 @@ def is_disabled(field):
         return True
     return False
 
+
 @register.filter
 def is_enabled(field):
     """
     Shortcut to return the logical negative of is_disabled
     """
     return not is_disabled(field)
+
 
 @register.filter
 def bootstrap_input_type(field):
@@ -131,12 +145,14 @@ def bootstrap_input_type(field):
         return u'radioset'
     return u'default'
 
+
 @register.simple_tag
 def active_url(request, url, output=u'active'):
     # Tag that outputs text if the given url is active for the request
     if url == request.path:
         return output
     return ''
+
 
 @register.filter
 def pagination(page, range=5):
@@ -156,6 +172,7 @@ def pagination(page, range=5):
             'range_max': range_max,
         })
     )
+
 
 @register.filter
 def split(str, splitter):
