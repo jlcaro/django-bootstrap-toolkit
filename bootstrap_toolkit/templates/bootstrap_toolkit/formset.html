@@ -17,6 +17,7 @@
             </tr></thead>
             {% endif %}
             <tr class="{% cycle row1,row2 %}">
+                
               {% for field in form.visible_fields %}
               <td>
                 {# Include the hidden fields in the form #}
@@ -27,9 +28,16 @@
                 {% endif %}
                 
                 {% include "bootstrap_toolkit/field_formset.html" with not_show_label="True" %}
+                
+                {% if forloop.first %}
+                    {% if form.non_field_errors %}
+                        {% include "bootstrap_toolkit/non_field_errors.html" %}
+                    {% endif %}
+                {% endif %}
+                </td>
 
-            </td>
-            {% endfor %}
+                {% endfor %}
+                
             </tr>
         {% endfor %}
     </table>
